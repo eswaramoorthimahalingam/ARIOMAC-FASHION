@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ARIOMAC">
+  <rect width="64" height="64" rx="14" fill="#4a1818" />
+  <path d="M32 10 50 54h-8l-4-10H25l-4 10h-7L32 10Zm3.5 27L32 27.5 28.5 37h7Z" fill="#d9a441" />
+  <path d="M18 15c4-5 11-7 18-4" fill="none" stroke="#f7e7bd" stroke-width="2.5" stroke-linecap="round" opacity=".9" />
+</svg>
