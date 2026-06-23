@@ -9,17 +9,20 @@ export function ProductCard({ product, delay = 0 }: { product: Product; delay?: 
     <Link
       to="/product/$id"
       params={{ id: product.id }}
-      className="group block animate-fade-up"
+      className="group block animate-fade-up tap-scale rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-4 focus-visible:ring-offset-background"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="relative overflow-hidden rounded-lg bg-card hover-lift">
+      <div className="shine-sweep relative overflow-hidden rounded-lg bg-card hover-lift">
         <div className="aspect-[4/5] overflow-hidden bg-muted">
           <img
             src={product.image}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-focus-visible:scale-110"
           />
+        </div>
+        <div className="absolute inset-x-3 bottom-3 translate-y-3 rounded-md bg-background/90 px-3 py-2 text-center text-xs font-bold uppercase tracking-[0.22em] text-primary opacity-0 shadow-gold backdrop-blur transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+          View Details
         </div>
         <span className="absolute top-3 left-3 bg-luxe text-primary-foreground text-[10px] tracking-widest uppercase px-2.5 py-1 rounded-full">
           {product.tagline}

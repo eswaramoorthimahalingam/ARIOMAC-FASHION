@@ -4,6 +4,7 @@ import { ProductCard } from "@/components/site/ProductCard";
 import { products } from "@/lib/products";
 import { ArrowRight, MessageCircle, Sparkles, Truck, ShieldCheck, RotateCcw } from "lucide-react";
 import hero from "@/assets/hero-saree.jpg";
+import ariomacLogo from "@/assets/Ariomac-logo-transparent.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,6 +21,13 @@ export const Route = createFileRoute("/")({
 function Home() {
   const featured = products.slice(0, 4);
   const trending = products.slice(4);
+  const marqueeItems = [
+    "Free shipping above ₹1,499",
+    "Cash on Delivery",
+    "7-day Returns",
+    "WhatsApp Support",
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -31,6 +39,13 @@ function Home() {
         </div>
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center relative">
           <div className="animate-fade-up">
+            <img
+              src={ariomacLogo}
+              alt="ARIOMAC Fashion India"
+              className="animate-soft-pulse mb-6 w-72 max-w-full object-contain drop-shadow-[0_8px_28px_rgba(201,168,76,0.28)] sm:w-96 md:w-[28rem]"
+              width={1458}
+              height={898}
+            />
             <span className="ornament mb-6">Heritage · Crafted · 2024</span>
             <h1 className="font-serif text-5xl md:text-7xl leading-[1.05] mt-4">
               Wear the <span className="text-gradient-gold italic">story</span><br />
@@ -40,10 +55,10 @@ function Home() {
               Heirloom silks, hand-stitched mirrors and zardosi that catches light like a temple lamp. Discover the new festive edit.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/shop" className="inline-flex items-center gap-2 bg-gold text-primary px-6 py-3 rounded-full font-medium hover-lift">
+              <Link to="/shop" className="shine-sweep tap-scale inline-flex items-center gap-2 bg-gold text-primary px-6 py-3 rounded-full font-bold hover-lift">
                 Shop the Edit <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link to="/checkout" className="inline-flex items-center gap-2 border border-gold/50 text-gold px-6 py-3 rounded-full hover:bg-gold/10 transition">
+              <Link to="/checkout" className="tap-scale inline-flex items-center gap-2 border border-gold/50 text-gold px-6 py-3 rounded-full font-semibold hover:bg-gold/10 transition">
                 <MessageCircle className="w-4 h-4" /> Chat to Order
               </Link>
             </div>
@@ -58,8 +73,8 @@ function Home() {
           </div>
           <div className="relative animate-fade-up" style={{ animationDelay: "200ms" }}>
             <div className="absolute inset-0 -m-6 rounded-full bg-gold/10 blur-2xl animate-float" />
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-gold/30 shadow-luxe">
-              <img src={hero} alt="Ariomac maroon silk saree" className="w-full h-full object-cover" width={1080} height={1440} />
+            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gold/30 shadow-luxe transition-transform duration-500 hover:rotate-1 hover:scale-[1.015]">
+              <img src={hero} alt="Ariomac maroon silk saree" className="h-full w-full object-cover transition-transform duration-1000 hover:scale-105" width={1080} height={1440} />
               <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur rounded-xl p-4 flex items-center gap-3 animate-slide-in" style={{ animationDelay: "800ms" }}>
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <div className="text-foreground text-sm flex-1">
@@ -77,12 +92,17 @@ function Home() {
       </section>
 
       {/* Marquee */}
-      <div className="bg-foreground text-background overflow-hidden border-y border-gold/30">
-        <div className="flex gap-12 py-3 whitespace-nowrap animate-[shimmer_25s_linear_infinite]" style={{ backgroundSize: "200% 100%" }}>
-          {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} className="text-xs tracking-[0.4em] uppercase flex items-center gap-12">
-              ✦ Free shipping above ₹1,499 ✦ Cash on Delivery ✦ 7-day Returns ✦ WhatsApp Support
-            </span>
+      <div className="overflow-hidden border-y border-gold/30 bg-foreground text-background">
+        <div className="marquee-reel py-3.5" aria-label="Store benefits">
+          {[0, 1].map((set) => (
+            <div key={set} className="marquee-set" aria-hidden={set === 1}>
+              {marqueeItems.map((item) => (
+                <span key={`${set}-${item}`} className="marquee-item">
+                  <span className="text-gold">✦</span>
+                  {item}
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -98,26 +118,56 @@ function Home() {
             View all <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid responsive-card-grid gap-6">
           {featured.map((p, i) => <ProductCard key={p.id} product={p} delay={i * 80} />)}
         </div>
       </section>
 
       {/* Promise */}
-      <section className="bg-secondary/40 py-16">
-        <div className="max-w-7xl mx-auto px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {([
-            { Icon: Truck, t: "Free Shipping", d: "Pan-India delivery on orders above ₹1,499" },
-            { Icon: RotateCcw, t: "Easy Returns", d: "7-day no-questions-asked returns" },
-            { Icon: ShieldCheck, t: "Secure Payments", d: "COD + UPI + WhatsApp checkout" },
-            { Icon: Sparkles, t: "Handpicked", d: "Curated by stylists, made by artisans" },
-          ]).map(({ Icon, t, d }, i) => (
-            <div key={t} className="text-center animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
-              <Icon className="w-7 h-7 mx-auto text-gold mb-3" />
-              <h4 className="font-serif text-xl">{t}</h4>
-              <p className="text-sm text-muted-foreground mt-1">{d}</p>
-            </div>
-          ))}
+      <section className="bg-background py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-14 text-center">
+            <span className="ornament justify-center">Our Promise</span>
+            <h2 className="mt-6 font-serif text-4xl font-bold md:text-5xl">
+              Crafted, Curated & Conscious
+            </h2>
+          </div>
+          <div className="grid gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {([
+              {
+                Icon: Sparkles,
+                t: "Handpicked Festive Pieces",
+                d: "Each product is selected for fabric feel, fall, finish and occasion-ready detail.",
+              },
+              {
+                Icon: ShieldCheck,
+                t: "Quality You Can Trust",
+                d: "We inspect embroidery, color, stitching and packaging before it reaches your door.",
+              },
+              {
+                Icon: Truck,
+                t: "Pan-India Delivery",
+                d: "Carefully packed orders with free shipping above ₹1,499 and WhatsApp tracking support.",
+              },
+              {
+                Icon: RotateCcw,
+                t: "Easy Exchanges",
+                d: "Friendly support for size or style changes within our simple 7-day exchange window.",
+              },
+            ]).map(({ Icon, t, d }, i) => (
+              <div
+                key={t}
+                className="group animate-fade-up border-border px-6 text-center sm:border-l first:border-l-0"
+                style={{ animationDelay: `${i * 80}ms` }}
+              >
+                <div className="mx-auto mb-7 grid h-24 w-24 place-items-center rounded-full border border-gold/35 bg-secondary/50 text-gold shadow-gold transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-105">
+                  <Icon className="h-11 w-11" />
+                </div>
+                <h3 className="font-serif text-2xl font-bold">{t}</h3>
+                <p className="mx-auto mt-4 max-w-xs text-sm leading-7 text-muted-foreground">{d}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -127,7 +177,7 @@ function Home() {
           <span className="ornament">Loved by you</span>
           <h2 className="font-serif text-4xl md:text-5xl mt-3">Trending now</h2>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid responsive-card-grid gap-6">
           {trending.map((p, i) => <ProductCard key={p.id} product={p} delay={i * 80} />)}
         </div>
       </section>
@@ -144,7 +194,7 @@ function Home() {
               <h3 className="font-serif text-3xl md:text-4xl">Not sure what to pick?</h3>
               <p className="text-primary-foreground/80 mt-2">Our stylists are one tap away. Chat to order — we'll size, suggest and ship.</p>
             </div>
-            <Link to="/checkout" className="bg-gold text-primary px-6 py-3 rounded-full font-medium hover-lift shrink-0">
+            <Link to="/checkout" className="shine-sweep tap-scale bg-gold text-primary px-6 py-3 rounded-full font-bold hover-lift shrink-0">
               Start Chat Checkout
             </Link>
           </div>

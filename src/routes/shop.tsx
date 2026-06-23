@@ -7,6 +7,7 @@ import { categories, products } from "@/lib/products";
 const search = z.object({
   cat: z.enum(["All","Saree","Kurti","Lehenga","Sharara"]).optional(),
   sort: z.enum(["new","low","high"]).optional(),
+  q: z.string().optional(),
 });
 
 export const Route = createFileRoute("/shop")({
@@ -23,9 +24,18 @@ export const Route = createFileRoute("/shop")({
 });
 
 function Shop() {
-  const { cat = "All", sort = "new" } = Route.useSearch();
+  const { cat = "All", sort = "new", q = "" } = Route.useSearch();
   const navigate = useNavigate({ from: "/shop" });
+  const query = q.trim().toLowerCase();
   let list = cat === "All" ? products : products.filter((p) => p.category === cat);
+  if (query) {
+    list = list.filter((p) =>
+      [p.name, p.category, p.fabric, p.tagline, p.description]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }
   if (sort === "low") list = [...list].sort((a, b) => a.price - b.price);
   if (sort === "high") list = [...list].sort((a, b) => b.price - a.price);
 
@@ -36,7 +46,11 @@ function Shop() {
         <div className="max-w-7xl mx-auto px-6">
           <span className="ornament">Collection</span>
           <h1 className="font-serif text-4xl md:text-6xl mt-3">The Festive Edit</h1>
-          <p className="mt-3 text-primary-foreground/80 max-w-2xl">All 8 styles — curated for weddings, pujas and quiet evenings alike.</p>
+          <p className="mt-3 text-primary-foreground/80 max-w-2xl">
+            {query
+              ? `Showing styles matching "${q.trim()}".`
+              : "All 8 styles — curated for weddings, pujas and quiet evenings alike."}
+          </p>
         </div>
       </section>
 
@@ -71,7 +85,9 @@ function Shop() {
 
       <section className="max-w-7xl mx-auto px-6 py-12 w-full flex-1">
         {list.length === 0 ? (
-          <p className="text-center text-muted-foreground py-24">No products in this category yet.</p>
+          <p className="text-center text-muted-foreground py-24">
+            {query ? "No products found for this search." : "No products in this category yet."}
+          </p>
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {list.map((p, i) => <ProductCard key={p.id} product={p} delay={i * 60} />)}

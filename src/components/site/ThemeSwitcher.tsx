@@ -53,7 +53,7 @@ export function ThemeSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label="Change theme"
-        className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-border/60 hover:border-gold hover:text-gold transition"
+        className="tap-scale inline-flex h-10 w-10 items-center justify-center rounded-full border border-gold/35 bg-background/80 text-foreground shadow-sm transition hover:border-gold hover:bg-secondary hover:text-primary"
       >
         <Palette className="w-4 h-4" />
       </DropdownMenuTrigger>
