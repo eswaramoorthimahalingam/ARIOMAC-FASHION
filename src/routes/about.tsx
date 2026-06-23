@@ -28,8 +28,8 @@ function About() {
         </div>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link to="/shop" className="bg-luxe text-primary-foreground px-6 py-3 rounded-full hover-lift">Browse the Edit</Link>
-          <a href="https://wa.me/918838882424" target="_blank" rel="noreferrer" className="border border-gold text-gold px-6 py-3 rounded-full hover:bg-gold/10 inline-flex items-center gap-2 transition">
-            <MessageCircle className="w-4 h-4" /> +91 88388 82424
+          <a href="https://wa.me/919176294875" target="_blank" rel="noreferrer" className="border border-gold text-gold px-6 py-3 rounded-full hover:bg-gold/10 inline-flex items-center gap-2 transition">
+            <MessageCircle className="w-4 h-4" /> +91 91762 94875
           </a>
         </div>
       </section>

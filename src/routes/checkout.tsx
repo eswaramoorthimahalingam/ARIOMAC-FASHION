@@ -9,7 +9,7 @@ export const Route = createFileRoute("/checkout")({
   component: Checkout,
 });
 
-const WHATSAPP = "918838882424";
+const WHATSAPP = "919176294875";
 
 type Step = "name" | "phone" | "address" | "pincode" | "pay" | "done";
 type Msg = { from: "bot" | "user"; text: string; ts?: number };

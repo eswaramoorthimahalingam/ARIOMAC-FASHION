@@ -71,19 +71,19 @@ function Home() {
               ))}
             </div>
           </div>
-          <div className="relative animate-fade-up" style={{ animationDelay: "200ms" }}>
+          <div className="relative pb-28 animate-fade-up" style={{ animationDelay: "200ms" }}>
             <div className="absolute inset-0 -m-6 rounded-full bg-gold/10 blur-2xl animate-float" />
             <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-gold/30 shadow-luxe transition-transform duration-500 hover:rotate-1 hover:scale-[1.015]">
               <img src={hero} alt="Ariomac maroon silk saree" className="h-full w-full object-cover transition-transform duration-1000 hover:scale-105" width={1080} height={1440} />
-              <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur rounded-xl p-4 flex items-center gap-3 animate-slide-in" style={{ animationDelay: "800ms" }}>
+              <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur rounded-xl p-3 sm:p-4 flex items-center gap-3 animate-slide-in" style={{ animationDelay: "800ms" }}>
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <div className="text-foreground text-sm flex-1">
+                <div className="min-w-0 flex-1 text-sm text-foreground">
                   <p className="font-medium">Riya just ordered the Rani Banarasi</p>
                   <p className="text-xs text-muted-foreground">2 minutes ago · Chennai</p>
                 </div>
               </div>
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-card border border-gold/40 rounded-xl px-5 py-3 shadow-gold animate-float" style={{ animationDelay: "1s" }}>
+            <div className="absolute bottom-4 left-4 bg-card border border-gold/40 rounded-xl px-5 py-3 shadow-gold animate-float sm:left-8" style={{ animationDelay: "1s" }}>
               <p className="text-[10px] tracking-widest uppercase text-gold">Free Shipping</p>
               <p className="font-serif text-lg">Above ₹1,499</p>
             </div>

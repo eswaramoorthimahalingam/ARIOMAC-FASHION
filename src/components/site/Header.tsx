@@ -228,7 +228,7 @@ export function Footer() {
             <p className="flex items-center gap-3 border-t border-border pt-4 text-gold"><Clock className="h-4 w-4" /> For any queries</p>
           </div>
           <a
-            href="https://wa.me/918838882424"
+            href="https://wa.me/919176294875"
             target="_blank"
             rel="noreferrer"
             className="mt-4 inline-flex items-center gap-2 text-sm font-bold hover:text-primary"

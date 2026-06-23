@@ -129,7 +129,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <a
-        href="https://wa.me/918838882424"
+        href="https://wa.me/919176294875"
         target="_blank"
         rel="noreferrer"
         aria-label="Chat on WhatsApp"
