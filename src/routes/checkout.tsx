@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header, Footer } from "@/components/site/Header";
 import { useCart, calcTotals, formatINR } from "@/lib/cart";
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, Send, Check, ShoppingBag } from "lucide-react";
+import { MessageCircle, Send, Check, ShoppingBag, PackageCheck } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Chat Checkout · ARIOMAC" }, { name: "description", content: "Place your order in a conversation. WhatsApp confirms it instantly." }] }),
@@ -13,6 +14,12 @@ const WHATSAPP = "919176294875";
 
 type Step = "name" | "phone" | "address" | "pincode" | "pay" | "done";
 type Msg = { from: "bot" | "user"; text: string; ts?: number };
+type CreatedOrder = {
+  id: string;
+  trackingCode: string;
+  items: Array<{ productId: string; name: string; size: string; qty: number; lineTotal: number }>;
+  totals: { subtotal: number; shipping: number; discount: number; total: number };
+};
 
 function Checkout() {
   const items = useCart((s) => s.items);
@@ -24,6 +31,8 @@ function Checkout() {
   const [typing, setTyping] = useState(false);
   const [input, setInput] = useState("");
   const [form, setForm] = useState({ name: "", phone: "", address: "", pincode: "", pay: "" });
+  const [creatingOrder, setCreatingOrder] = useState(false);
+  const [order, setOrder] = useState<CreatedOrder | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const pushBot = (text: string) => {
@@ -45,9 +54,9 @@ function Checkout() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing]);
 
-  const handleSubmit = (e?: React.FormEvent) => {
+  const handleSubmit = (e?: React.FormEvent, overrideValue?: string) => {
     e?.preventDefault();
-    const value = input.trim();
+    const value = (overrideValue ?? input).trim();
     if (!value || step === "done") return;
     setMessages((m) => [...m, { from: "user", text: value }]);
     setInput("");
@@ -77,15 +86,48 @@ function Checkout() {
     } else if (step === "pay") {
       setForm((f) => ({ ...f, pay: value }));
       setStep("done");
-      pushBot("Perfect! Tap the button below to send your order to our WhatsApp. We'll confirm in minutes 🎉");
+      pushBot("Perfect! Tap the button below to confirm your order. We'll generate your tracking code instantly.");
     }
   };
 
-  const quickReply = (val: string) => { setInput(val); setTimeout(() => handleSubmit(), 0); };
+  const quickReply = (val: string) => handleSubmit(undefined, val);
+
+  const createOrder = async () => {
+    setCreatingOrder(true);
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          customer: {
+            name: form.name,
+            phone: form.phone,
+            address: form.address,
+            pincode: form.pincode,
+          },
+          paymentMethod: form.pay,
+          items: items.map((item) => ({ id: item.id, size: item.size, qty: item.qty })),
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Order could not be created.");
+      setOrder(data.order);
+      clear();
+      toast.success(`Order ${data.order.id} created`);
+      pushBot(`Done! Your order ${data.order.id} is confirmed with tracking code ${data.order.trackingCode}.`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Order could not be created.");
+    } finally {
+      setCreatingOrder(false);
+    }
+  };
 
   const buildWaMessage = () => {
+    const confirmedItems = order?.items.map((i, n) => `${n+1}. ${i.name} — Size ${i.size} × ${i.qty} = ${formatINR(i.lineTotal)}`);
     const lines = [
       "🛍️ *New Order — Ariomac*",
+      order ? `*Order ID:* ${order.id}` : "",
+      order ? `*Tracking:* ${order.trackingCode}` : "",
       "",
       `*Name:* ${form.name}`,
       `*Phone:* ${form.phone}`,
@@ -93,19 +135,19 @@ function Checkout() {
       `*Payment:* ${form.pay}`,
       "",
       "*Items:*",
-      ...items.map((i, n) => `${n+1}. ${i.name} — Size ${i.size} × ${i.qty} = ${formatINR(i.price * i.qty)}`),
+      ...(confirmedItems ?? items.map((i, n) => `${n+1}. ${i.name} — Size ${i.size} × ${i.qty} = ${formatINR(i.price * i.qty)}`)),
       "",
-      `Subtotal: ${formatINR(totals.subtotal)}`,
-      `Shipping: ${totals.shipping === 0 ? "Free" : formatINR(totals.shipping)}`,
-      totals.discount > 0 ? `Bundle Discount: − ${formatINR(totals.discount)}` : "",
-      `*Total: ${formatINR(totals.total)}*`,
+      `Subtotal: ${formatINR(order?.totals.subtotal ?? totals.subtotal)}`,
+      `Shipping: ${(order?.totals.shipping ?? totals.shipping) === 0 ? "Free" : formatINR(order?.totals.shipping ?? totals.shipping)}`,
+      (order?.totals.discount ?? totals.discount) > 0 ? `Bundle Discount: − ${formatINR(order?.totals.discount ?? totals.discount)}` : "",
+      `*Total: ${formatINR(order?.totals.total ?? totals.total)}*`,
     ].filter(Boolean);
     return encodeURIComponent(lines.join("\n"));
   };
 
   const waLink = `https://wa.me/${WHATSAPP}?text=${buildWaMessage()}`;
 
-  if (items.length === 0) {
+  if (items.length === 0 && !order) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -174,12 +216,33 @@ function Checkout() {
                   <div className="flex items-center gap-2 text-gold mb-2">
                     <Check className="w-5 h-5" /><span className="text-xs uppercase tracking-widest">Order Ready</span>
                   </div>
-                  <p className="font-serif text-xl">Send to WhatsApp to confirm</p>
-                  <p className="text-sm text-primary-foreground/80 mt-1">We'll reply with payment & dispatch details.</p>
-                  <a href={waLink} target="_blank" rel="noreferrer" onClick={() => { setTimeout(() => clear(), 1000); }}
-                    className="mt-4 inline-flex items-center gap-2 bg-gold text-primary px-5 py-3 rounded-full font-medium hover-lift">
-                    <MessageCircle className="w-4 h-4" /> Send Order on WhatsApp
-                  </a>
+                  {!order ? (
+                    <>
+                      <p className="font-serif text-xl">Confirm your ARIOMAC order</p>
+                      <p className="text-sm text-primary-foreground/80 mt-1">Inventory will be reserved and your tracking code will be created.</p>
+                      <button
+                        onClick={createOrder}
+                        disabled={creatingOrder}
+                        className="mt-4 inline-flex items-center gap-2 bg-gold text-primary px-5 py-3 rounded-full font-medium hover-lift disabled:opacity-60"
+                      >
+                        <PackageCheck className="w-4 h-4" /> {creatingOrder ? "Creating Order" : "Confirm Order"}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-serif text-xl">Order confirmed</p>
+                      <p className="text-sm text-primary-foreground/80 mt-1">Order {order.id} · Tracking {order.trackingCode}</p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Link to="/track" className="inline-flex items-center gap-2 bg-background text-primary px-5 py-3 rounded-full font-medium hover-lift">
+                          <Check className="w-4 h-4" /> Track Order
+                        </Link>
+                        <a href={waLink} target="_blank" rel="noreferrer"
+                          className="inline-flex items-center gap-2 bg-gold text-primary px-5 py-3 rounded-full font-medium hover-lift">
+                          <MessageCircle className="w-4 h-4" /> Send on WhatsApp
+                        </a>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -203,7 +266,7 @@ function Checkout() {
           <aside className="bg-card border border-gold/30 rounded-3xl p-5 shadow-gold h-fit lg:sticky lg:top-24">
             <h3 className="font-serif text-lg">Order Summary</h3>
             <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
-              {items.map((it) => (
+              {!order && items.map((it) => (
                 <div key={`${it.id}-${it.size}`} className="flex gap-2 items-center text-xs">
                   <img src={it.image} alt={it.name} className="w-10 h-12 object-cover rounded" />
                   <div className="flex-1 min-w-0">
@@ -213,16 +276,25 @@ function Checkout() {
                   <span className="text-xs font-semibold">{formatINR(it.price * it.qty)}</span>
                 </div>
               ))}
+              {order?.items.map((it) => (
+                <div key={`${it.productId}-${it.size}`} className="flex gap-2 items-center text-xs rounded-md bg-secondary/50 p-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="truncate font-medium">{it.name}</p>
+                    <p className="text-muted-foreground">{it.size} · ×{it.qty}</p>
+                  </div>
+                  <span className="text-xs font-semibold">{formatINR(it.lineTotal)}</span>
+                </div>
+              ))}
             </div>
             <div className="border-t border-dashed border-border my-4" />
             <div className="space-y-1.5 text-xs">
-              <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>{formatINR(totals.subtotal)}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Shipping</span><span>{totals.shipping === 0 ? "Free" : formatINR(totals.shipping)}</span></div>
-              {totals.discount > 0 && <div className="flex justify-between text-gold"><span>Bundle Discount</span><span>− {formatINR(totals.discount)}</span></div>}
+              <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>{formatINR(order?.totals.subtotal ?? totals.subtotal)}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Shipping</span><span>{(order?.totals.shipping ?? totals.shipping) === 0 ? "Free" : formatINR(order?.totals.shipping ?? totals.shipping)}</span></div>
+              {(order?.totals.discount ?? totals.discount) > 0 && <div className="flex justify-between text-gold"><span>Bundle Discount</span><span>− {formatINR(order?.totals.discount ?? totals.discount)}</span></div>}
             </div>
             <div className="border-t border-border mt-3 pt-3 flex items-baseline justify-between">
               <span className="text-xs uppercase tracking-widest">Total</span>
-              <span className="font-serif text-2xl text-maroon">{formatINR(totals.total)}</span>
+              <span className="font-serif text-2xl text-maroon">{formatINR(order?.totals.total ?? totals.total)}</span>
             </div>
             <Link to="/cart" className="block text-center text-xs text-muted-foreground mt-3 hover:text-primary">← Edit bag</Link>
           </aside>

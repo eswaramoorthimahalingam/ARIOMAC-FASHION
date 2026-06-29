@@ -74,13 +74,13 @@ export function Header() {
           >
             <Heart className="h-5 w-5 fill-current" />
           </button>
-          <button
-            type="button"
+          <Link
+            to="/account"
             className="tap-scale hidden h-10 w-10 items-center justify-center rounded-full text-foreground transition hover:bg-secondary/70 hover:text-primary lg:inline-flex"
-            aria-label="Account"
+            aria-label="My account"
           >
             <UserRound className="h-5 w-5 fill-current" />
-          </button>
+          </Link>
           <Link
           to="/cart"
           className="shine-sweep tap-scale relative inline-flex items-center gap-2 rounded-full bg-luxe px-5 py-2.5 font-bold text-primary-foreground shadow-gold ring-1 ring-gold/35 transition hover:scale-105"
@@ -112,6 +112,8 @@ export function Header() {
           <Link to="/shop" className={navLinkClass}>Shop</Link>
           <Link to="/shop" search={{ cat: "Saree" }} className={navLinkClass}>Sarees</Link>
           <Link to="/shop" search={{ cat: "Lehenga" }} className={navLinkClass}>Lehengas</Link>
+          <Link to="/track" className={navLinkClass}>Track</Link>
+          <Link to="/login" className={navLinkClass}>Login</Link>
           <Link to="/about" className={navLinkClass}>About</Link>
         </nav>
       </div>
@@ -142,6 +144,10 @@ export function Header() {
             <Link to="/shop" className={mobileLinkClass} onClick={() => setMobileOpen(false)}>Shop</Link>
             <Link to="/shop" search={{ cat: "Saree" }} className={mobileLinkClass} onClick={() => setMobileOpen(false)}>Sarees</Link>
             <Link to="/shop" search={{ cat: "Lehenga" }} className={mobileLinkClass} onClick={() => setMobileOpen(false)}>Lehengas</Link>
+            <Link to="/track" className={mobileLinkClass} onClick={() => setMobileOpen(false)}>Track Order</Link>
+            <Link to="/login" className={mobileLinkClass} onClick={() => setMobileOpen(false)}>Customer Login</Link>
+            <Link to="/signup" className={mobileLinkClass} onClick={() => setMobileOpen(false)}>Sign Up</Link>
+            <Link to="/admin-login" className={mobileLinkClass} onClick={() => setMobileOpen(false)}>Admin Login</Link>
             <Link to="/about" className={mobileLinkClass} onClick={() => setMobileOpen(false)}>About</Link>
           </nav>
         </div>

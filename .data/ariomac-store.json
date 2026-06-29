@@ -1,0 +1,168 @@
+{
+  "inventory": [
+    {
+      "id": "ar-001",
+      "name": "Rani Banarasi Silk Saree",
+      "category": "Saree",
+      "price": 1899,
+      "mrp": 3499,
+      "sizes": [
+        "Free Size"
+      ],
+      "sizeStock": {
+        "Free Size": 18
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    },
+    {
+      "id": "ar-002",
+      "name": "Emerald Kanjivaram Drape",
+      "category": "Saree",
+      "price": 2299,
+      "mrp": 4199,
+      "sizes": [
+        "Free Size"
+      ],
+      "sizeStock": {
+        "Free Size": 14
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    },
+    {
+      "id": "ar-003",
+      "name": "Midnight Sequin Saree",
+      "category": "Saree",
+      "price": 1599,
+      "mrp": 2999,
+      "sizes": [
+        "Free Size"
+      ],
+      "sizeStock": {
+        "Free Size": 20
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    },
+    {
+      "id": "ar-004",
+      "name": "Royal Blue Anarkali",
+      "category": "Kurti",
+      "price": 1199,
+      "mrp": 2199,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "sizeStock": {
+        "S": 8,
+        "M": 12,
+        "L": 11,
+        "XL": 9,
+        "XXL": 5
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    },
+    {
+      "id": "ar-005",
+      "name": "Marigold Mirror Kurti",
+      "category": "Kurti",
+      "price": 799,
+      "mrp": 1499,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "sizeStock": {
+        "S": 15,
+        "M": 18,
+        "L": 16,
+        "XL": 10
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    },
+    {
+      "id": "ar-006",
+      "name": "Blush Pink Lehenga Set",
+      "category": "Lehenga",
+      "price": 3299,
+      "mrp": 5999,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "sizeStock": {
+        "S": 6,
+        "M": 7,
+        "L": 5,
+        "XL": 3
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    },
+    {
+      "id": "ar-007",
+      "name": "Sindoor Bridal Lehenga",
+      "category": "Lehenga",
+      "price": 4899,
+      "mrp": 8999,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "sizeStock": {
+        "S": 3,
+        "M": 5,
+        "L": 4,
+        "XL": 2
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    },
+    {
+      "id": "ar-008",
+      "name": "Ivory Gota Sharara Suit",
+      "category": "Sharara",
+      "price": 1799,
+      "mrp": 3299,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "sizeStock": {
+        "S": 7,
+        "M": 9,
+        "L": 8,
+        "XL": 4
+      },
+      "lowStockThreshold": 5,
+      "active": true,
+      "updatedAt": "2026-06-28T07:52:08.105Z"
+    }
+  ],
+  "orders": [],
+  "users": [],
+  "adminSessions": {},
+  "userSessions": {}
+}
